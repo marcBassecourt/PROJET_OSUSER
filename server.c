@@ -304,7 +304,7 @@ int main(int argc, char *argv[])
                                        reply);
 
 				// Envoyer un message broadcast pour communiquer a tout le monde la liste des joueurs actuellement
-				// connectes
+				// connectes0
 
                                 sprintf(reply,"L %s %s %s %s", tcpClients[0].name, tcpClients[1].name, tcpClients[2].name, tcpClients[3].name);
                                 broadcastMessage(reply);
@@ -318,28 +318,28 @@ int main(int argc, char *argv[])
             sprintf(reply,"D %d %d %d",deck[0],deck[1],deck[2]);
             sendMessageToClient(tcpClients[0].ipAddress,tcpClients[0].port,reply);
             for(int i = 0; i < 8; i++){
-              sprintf(reply,"V %d",tableCartes[0][i]);
+              sprintf(reply,"V 0 %d %d",i,tableCartes[0][i]);
               sendMessageToClient(tcpClients[0].ipAddress,tcpClients[0].port,reply);
             }
 					// On envoie ses cartes au joueur 1, ainsi que la ligne qui lui correspond dans tableCartes
             sprintf(reply,"D %d %d %d",deck[3],deck[4],deck[5]);
             sendMessageToClient(tcpClients[1].ipAddress,tcpClients[1].port,reply);
             for(int i = 0; i < 8; i++){
-              sprintf(reply,"V %d",tableCartes[1][i]);
+              sprintf(reply,"V 1 %d %d",i,tableCartes[1][i]);
               sendMessageToClient(tcpClients[1].ipAddress,tcpClients[1].port,reply);
             }
 					// On envoie ses cartes au joueur 2, ainsi que la ligne qui lui correspond dans tableCartes
             sprintf(reply,"D %d %d %d",deck[6],deck[7],deck[8]);
             sendMessageToClient(tcpClients[2].ipAddress,tcpClients[2].port,reply);
             for(int i = 0; i < 8; i++){
-              sprintf(reply,"V %d",tableCartes[2][i]);
+              sprintf(reply,"V 2 %d %d",i,tableCartes[2][i]);
               sendMessageToClient(tcpClients[2].ipAddress,tcpClients[2].port,reply);
             }
 					// On envoie ses cartes au joueur 3, ainsi que la ligne qui lui correspond dans tableCartes
             sprintf(reply,"D %d %d %d",deck[9],deck[10],deck[11]);
             sendMessageToClient(tcpClients[3].ipAddress,tcpClients[3].port,reply);
             for(int i = 0; i < 8; i++){
-              sprintf(reply,"V %d",tableCartes[3][i]);
+              sprintf(reply,"V 3 %d %d",i,tableCartes[3][i]);
               sendMessageToClient(tcpClients[3].ipAddress,tcpClients[3].port,reply);
             }
 					// On envoie enfin un message a tout le monde pour definir qui est le joueur courant=0
