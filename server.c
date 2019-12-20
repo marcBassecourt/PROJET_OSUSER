@@ -50,6 +50,7 @@ void melangerDeck()
         }
 }
 
+//COMMENTAIRE TEST
 void createTable()
 {
 	// Le joueur 0 possede les cartes d'indice 0,1,2
