@@ -1,6 +1,6 @@
-#include <SDL.h>        
-#include <SDL_image.h>        
-#include <SDL_ttf.h>        
+#include <SDL.h>
+#include <SDL_image.h>
+#include <SDL_ttf.h>
 #include <pthread.h>
 #include <unistd.h>
 #include <stdlib.h>
@@ -159,10 +159,10 @@ int main(int argc, char ** argv)
 
     SDL_Init(SDL_INIT_VIDEO);
 	TTF_Init();
- 
+
     SDL_Window * window = SDL_CreateWindow("SDL2 SH13",
         SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, 1024, 768, 0);
- 
+
     SDL_Renderer *renderer = SDL_CreateRenderer(window, -1, 0);
 
     SDL_Surface *deck[13],*objet[8],*gobutton,*connectbutton;
@@ -226,7 +226,7 @@ int main(int argc, char ** argv)
     texture_gobutton = SDL_CreateTextureFromSurface(renderer, gobutton);
     texture_connectbutton = SDL_CreateTextureFromSurface(renderer, connectbutton);
 
-    TTF_Font* Sans = TTF_OpenFont("sans.ttf", 15); 
+    TTF_Font* Sans = TTF_OpenFont("sans.ttf", 15);
     printf("Sans=%p\n",Sans);
 
    /* Creation du thread serveur tcp. */
@@ -250,7 +250,7 @@ int main(int argc, char ** argv)
 				if ((mx<200) && (my<50) && (connectEnabled==1))
 				{
 					sprintf(sendBuffer,"C %s %d %s",gClientIpAddress,gClientPort,gName);
-
+          sendMessageToServer(gServerIpAddress, gServerPort, sendBuffer);
 					// RAJOUTER DU CODE ICI
 
 					connectEnabled=0;
@@ -354,29 +354,29 @@ int main(int argc, char ** argv)
         SDL_Rect dstrect_image1 = { 0, 340, 250, 330/2 };
 
 	SDL_SetRenderDrawColor(renderer, 255, 230, 230, 230);
-	SDL_Rect rect = {0, 0, 1024, 768}; 
+	SDL_Rect rect = {0, 0, 1024, 768};
 	SDL_RenderFillRect(renderer, &rect);
 
 	if (joueurSel!=-1)
 	{
 		SDL_SetRenderDrawColor(renderer, 255, 180, 180, 255);
-		SDL_Rect rect1 = {0, 90+joueurSel*60, 200 , 60}; 
+		SDL_Rect rect1 = {0, 90+joueurSel*60, 200 , 60};
 		SDL_RenderFillRect(renderer, &rect1);
-	}	
+	}
 
 	if (objetSel!=-1)
 	{
 		SDL_SetRenderDrawColor(renderer, 180, 255, 180, 255);
-		SDL_Rect rect1 = {200+objetSel*60, 0, 60 , 90}; 
+		SDL_Rect rect1 = {200+objetSel*60, 0, 60 , 90};
 		SDL_RenderFillRect(renderer, &rect1);
-	}	
+	}
 
 	if (guiltSel!=-1)
 	{
 		SDL_SetRenderDrawColor(renderer, 180, 180, 255, 255);
-		SDL_Rect rect1 = {100, 350+guiltSel*30, 150 , 30}; 
+		SDL_Rect rect1 = {100, 350+guiltSel*30, 150 , 30};
 		SDL_RenderFillRect(renderer, &rect1);
-	}	
+	}
 
 	{
         SDL_Rect dstrect_pipe = { 210, 10, 40, 40 };
@@ -404,7 +404,7 @@ int main(int argc, char ** argv)
                 SDL_Texture* Message = SDL_CreateTextureFromSurface(renderer, surfaceMessage);
 
                 SDL_Rect Message_rect; //create a rect
-                Message_rect.x = 230+i*60;  //controls the rect's x coordinate 
+                Message_rect.x = 230+i*60;  //controls the rect's x coordinate
                 Message_rect.y = 50; // controls the rect's y coordinte
                 Message_rect.w = surfaceMessage->w; // controls the width of the rect
                 Message_rect.h = surfaceMessage->h; // controls the height of the rect
@@ -491,7 +491,7 @@ int main(int argc, char ** argv)
         SDL_Rect dstrect_carnet = { 60, 410, 30, 30 };
         SDL_RenderCopy(renderer, texture_objet[4], NULL, &dstrect_carnet);
 	}
-	// Inspector Gregson 
+	// Inspector Gregson
 	{
         SDL_Rect dstrect_couronne = { 0, 440, 30, 30 };
         SDL_RenderCopy(renderer, texture_objet[3], NULL, &dstrect_couronne);
@@ -504,7 +504,7 @@ int main(int argc, char ** argv)
         SDL_Rect dstrect_carnet = { 60, 440, 30, 30 };
         SDL_RenderCopy(renderer, texture_objet[4], NULL, &dstrect_carnet);
 	}
-	// Inspector Baynes 
+	// Inspector Baynes
 	{
         SDL_Rect dstrect_couronne = { 0, 470, 30, 30 };
         SDL_RenderCopy(renderer, texture_objet[3], NULL, &dstrect_couronne);
@@ -522,7 +522,7 @@ int main(int argc, char ** argv)
         SDL_Rect dstrect_poing = { 30, 500, 30, 30 };
         SDL_RenderCopy(renderer, texture_objet[2], NULL, &dstrect_poing);
 	}
-	// Inspector Hopkins 
+	// Inspector Hopkins
 	{
         SDL_Rect dstrect_couronne = { 0, 530, 30, 30 };
         SDL_RenderCopy(renderer, texture_objet[3], NULL, &dstrect_couronne);
@@ -535,7 +535,7 @@ int main(int argc, char ** argv)
         SDL_Rect dstrect_oeil = { 60, 530, 30, 30 };
         SDL_RenderCopy(renderer, texture_objet[6], NULL, &dstrect_oeil);
 	}
-	// Sherlock Holmes 
+	// Sherlock Holmes
 	{
         SDL_Rect dstrect_pipe = { 0, 560, 30, 30 };
         SDL_RenderCopy(renderer, texture_objet[0], NULL, &dstrect_pipe);
@@ -548,7 +548,7 @@ int main(int argc, char ** argv)
         SDL_Rect dstrect_poing = { 60, 560, 30, 30 };
         SDL_RenderCopy(renderer, texture_objet[2], NULL, &dstrect_poing);
 	}
-	// John Watson 
+	// John Watson
 	{
         SDL_Rect dstrect_pipe = { 0, 590, 30, 30 };
         SDL_RenderCopy(renderer, texture_objet[0], NULL, &dstrect_pipe);
@@ -676,7 +676,7 @@ int main(int argc, char ** argv)
 		SDL_Texture* Message = SDL_CreateTextureFromSurface(renderer, surfaceMessage);
 
 		SDL_Rect Message_rect; //create a rect
-		Message_rect.x = 10;  //controls the rect's x coordinate 
+		Message_rect.x = 10;  //controls the rect's x coordinate
 		Message_rect.y = 110+i*60; // controls the rect's y coordinte
 		Message_rect.w = surfaceMessage->w; // controls the width of the rect
 		Message_rect.h = surfaceMessage->h; // controls the height of the rect
@@ -688,15 +688,15 @@ int main(int argc, char ** argv)
 
         SDL_RenderPresent(renderer);
     }
- 
+
     SDL_DestroyTexture(texture_deck[0]);
     SDL_DestroyTexture(texture_deck[1]);
     SDL_FreeSurface(deck[0]);
     SDL_FreeSurface(deck[1]);
     SDL_DestroyRenderer(renderer);
     SDL_DestroyWindow(window);
- 
+
     SDL_Quit();
- 
+
     return 0;
 }
