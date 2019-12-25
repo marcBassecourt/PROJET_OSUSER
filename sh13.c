@@ -249,9 +249,9 @@ int main(int argc, char ** argv)
 				//printf("mx=%d my=%d\n",mx,my);
 				if ((mx<200) && (my<50) && (connectEnabled==1))
 				{
-					sprintf(sendBuffer,"C %s %d %s",gClientIpAddress,gClientPort,gName);
-          sendMessageToServer(gServerIpAddress, gServerPort, sendBuffer);
 					// RAJOUTER DU CODE ICI
+					sprintf(sendBuffer,"C %s %d %s",gClientIpAddress,gClientPort,gName);
+         			sendMessageToServer(gServerIpAddress, gServerPort, sendBuffer);
 
 					connectEnabled=0;
 				}
@@ -320,34 +320,37 @@ int main(int argc, char ** argv)
                 int ind1 = 0;
                 int ind2 = 0;
                 int val = 0;
+                int currPlay = -1;
 		switch (gbuffer[0])
 		{
 			// Message 'I' : le joueur recoit son Id
 			case 'I':
 				// RAJOUTER DU CODE ICI
-        sscanf(gbuffer,"%c %d", &com, &gId);
+        		sscanf(gbuffer,"%c %d", &com, &gId);
 				break;
 			// Message 'L' : le joueur recoit la liste des joueurs
 			case 'L':
 				// RAJOUTER DU CODE ICI
-        sscanf(gbuffer,"%c %s %s %s %s", &com, gNames[0],gNames[1],gNames[2],gNames[3]);
+        		sscanf(gbuffer,"%c %s %s %s %s", &com, gNames[0],gNames[1],gNames[2],gNames[3]);
 				break;
 			// Message 'D' : le joueur recoit ses trois cartes
 			case 'D':
 				// RAJOUTER DU CODE ICI
-        sscanf(gbuffer,"%c %d %d %d", &com, &b[0],&b[1],&b[2]);
+		        sscanf(gbuffer,"%c %d %d %d", &com, &b[0],&b[1],&b[2]);
 				break;
 			// Message 'M' : le joueur recoit le n° du joueur courant
 			// Cela permet d'affecter goEnabled pour autoriser l'affichage du bouton go
 			case 'M':
 				// RAJOUTER DU CODE ICI
-
+				sscanf(gbuffer,"%c %d", &com, &currPlay);
+				if(currPlay == gId)
+					goEnabled = 1;
 				break;
 			// Message 'V' : le joueur recoit une valeur de tableCartes
 			case 'V':
 				// RAJOUTER DU CODE ICI
-        sscanf(gbuffer,"%c %d %d %d", &com, &ind1, &ind2, &val);
-        tableCartes[ind1][ind2] = val;
+		        sscanf(gbuffer,"%c %d %d %d", &com, &ind1, &ind2, &val);
+		        tableCartes[ind1][ind2] = val;
 				break;
 		}
 		synchro=0;
