@@ -36,6 +36,9 @@ char *nbnoms[]={"Sebastian Moran", "irene Adler", "inspector Lestrade",
 
 volatile int synchro;
 
+int victoire = -1;
+int suspect = -1;
+
 void *fn_serveur_tcp(void *arg)
 {
         int sockfd, newsockfd, portno;
@@ -165,7 +168,7 @@ int main(int argc, char ** argv)
 
     SDL_Renderer *renderer = SDL_CreateRenderer(window, -1, 0);
 
-    SDL_Surface *deck[13],*objet[8],*gobutton,*connectbutton;
+    SDL_Surface *deck[13],*objet[8],*gobutton,*connectbutton, *victory, *defaite;
 
 	deck[0] = IMG_Load("SH13_0.png");
 	deck[1] = IMG_Load("SH13_1.png");
@@ -192,6 +195,8 @@ int main(int argc, char ** argv)
 
 	gobutton = IMG_Load("gobutton.png");
 	connectbutton = IMG_Load("connectbutton.png");
+	victory = IMG_Load("victoire.png");
+	defaite = IMG_Load("defaite.png");
 
 	strcpy(gNames[0],"-");
 	strcpy(gNames[1],"-");
@@ -216,7 +221,7 @@ int main(int argc, char ** argv)
 	goEnabled=0;
 	connectEnabled=1;
 
-    SDL_Texture *texture_deck[13],*texture_gobutton,*texture_connectbutton,*texture_objet[8];
+    SDL_Texture *texture_deck[13],*texture_gobutton,*texture_connectbutton,*texture_objet[8],*texture_victoire, *texture_defaite;
 
 	for (i=0;i<13;i++)
 		texture_deck[i] = SDL_CreateTextureFromSurface(renderer, deck[i]);
@@ -225,6 +230,8 @@ int main(int argc, char ** argv)
 
     texture_gobutton = SDL_CreateTextureFromSurface(renderer, gobutton);
     texture_connectbutton = SDL_CreateTextureFromSurface(renderer, connectbutton);
+    texture_victoire = SDL_CreateTextureFromSurface(renderer, victory);
+    texture_defaite = SDL_CreateTextureFromSurface(renderer, defaite);
 
     TTF_Font* Sans = TTF_OpenFont("sans.ttf", 15);
     printf("Sans=%p\n",Sans);
@@ -282,21 +289,21 @@ int main(int argc, char ** argv)
 					if (guiltSel!=-1)
 					{
 						sprintf(sendBuffer,"G %d %d",gId, guiltSel);
-
+						sendMessageToServer(gServerIpAddress, gServerPort, sendBuffer);
 					// RAJOUTER DU CODE ICI
 
 					}
 					else if ((objetSel!=-1) && (joueurSel==-1))
 					{
 						sprintf(sendBuffer,"O %d %d",gId, objetSel);
-
+						sendMessageToServer(gServerIpAddress, gServerPort, sendBuffer);
 					// RAJOUTER DU CODE ICI
 
 					}
 					else if ((objetSel!=-1) && (joueurSel!=-1))
 					{
 						sprintf(sendBuffer,"S %d %d %d",gId, joueurSel,objetSel);
-
+						sendMessageToServer(gServerIpAddress, gServerPort, sendBuffer);
 					// RAJOUTER DU CODE ICI
 
 					}
@@ -345,12 +352,20 @@ int main(int argc, char ** argv)
 				sscanf(gbuffer,"%c %d", &com, &currPlay);
 				if(currPlay == gId)
 					goEnabled = 1;
+				else
+					goEnabled = 0;
 				break;
 			// Message 'V' : le joueur recoit une valeur de tableCartes
 			case 'V':
 				// RAJOUTER DU CODE ICI
 		        sscanf(gbuffer,"%c %d %d %d", &com, &ind1, &ind2, &val);
 		        tableCartes[ind1][ind2] = val;
+				break;
+
+				// Message 'W' : le joueur recoit l'ID du vainqueur
+			case 'W':
+				// RAJOUTER DU CODE ICI
+		        sscanf(gbuffer,"%c %d %d", &com, &victoire, &guiltSel);
 				break;
 		}
 		synchro=0;
@@ -671,7 +686,62 @@ int main(int argc, char ** argv)
         	SDL_Rect dstrect = { 0, 0, 200, 50 };
         	SDL_RenderCopy(renderer, texture_connectbutton, NULL, &dstrect);
 	}
+	if (victoire==gId)
+	{
+			char buffer[100];
+        	SDL_Rect dstrect = { -100, -100,1250, 1000 };
+        	SDL_RenderCopy(renderer, texture_victoire, NULL, &dstrect);
+        	SDL_Color col = {255, 0, 0};
+        	for(int i = 0; i < 2; i++){
+        		if(i == 0)
+        			sprintf(buffer,"VICTOIRE du joueur %d : %s",victoire, gNames[victoire]);
+        		if(i == 1)
+        			sprintf(buffer,"Le coupable etait %s", nbnoms[guiltSel]);
+				SDL_Surface* surfaceMessage = TTF_RenderText_Solid(Sans, buffer, col);
+				SDL_Texture* Message = SDL_CreateTextureFromSurface(renderer, surfaceMessage);
 
+				SDL_Rect Message_rect; //create a rect
+				Message_rect.x = 750;
+				if(i == 0)
+					Message_rect.y = 620; // controls the rect's y coordinte
+				if(i == 1)
+					Message_rect.y = 650; // controls the rect's y coordinte
+				Message_rect.w = surfaceMessage->w; // controls the width of the rect
+				Message_rect.h = surfaceMessage->h; // controls the height of the rect
+
+				SDL_RenderCopy(renderer, Message, NULL, &Message_rect);
+		    		SDL_DestroyTexture(Message);
+		    		SDL_FreeSurface(surfaceMessage);
+        	} 
+	}
+	if (victoire!=gId && victoire != -1)
+	{
+			char buffer[100];
+        	SDL_Rect dstrect = { 200, 30, 600, 700 };
+        	SDL_RenderCopy(renderer, texture_defaite, NULL, &dstrect);
+        	SDL_Color col = {255, 0, 0};
+        	for(int i = 0; i < 2; i++){
+        		if(i == 0)
+        			sprintf(buffer,"VICTOIRE du joueur %d : %s",victoire, gNames[victoire]);
+        		if(i == 1)
+        			sprintf(buffer,"Le coupable etait %s",nbnoms[guiltSel]);
+				SDL_Surface* surfaceMessage = TTF_RenderText_Solid(Sans, buffer, col);
+				SDL_Texture* Message = SDL_CreateTextureFromSurface(renderer, surfaceMessage);
+
+				SDL_Rect Message_rect; //create a rect
+				Message_rect.x = 750;
+				if(i == 0)
+					Message_rect.y = 620; // controls the rect's y coordinte
+				if(i == 1)
+					Message_rect.y = 640; // controls the rect's y coordinte
+				Message_rect.w = surfaceMessage->w; // controls the width of the rect
+				Message_rect.h = surfaceMessage->h; // controls the height of the rect
+
+				SDL_RenderCopy(renderer, Message, NULL, &Message_rect);
+		    		SDL_DestroyTexture(Message);
+		    		SDL_FreeSurface(surfaceMessage);
+        	} 
+	}
         //SDL_SetRenderDrawColor(renderer, 255, 0, 0, SDL_ALPHA_OPAQUE);
         //SDL_RenderDrawLine(renderer, 0, 0, 200, 200);
 
