@@ -1,5 +1,5 @@
 #! /bin/sh
-./sh13 192.168.1.28 32000 192.168.1.28 32001 Marc &
-./sh13 192.168.1.28 32000 192.168.1.28 32002 Samir &
-./sh13 192.168.1.28 32000 192.168.1.28 32003 Arthur &
-./sh13 192.168.1.28 32000 192.168.1.28 32004 Ludo &
+./sh13 localhost 32000 localhost 32001 Marc &
+./sh13 localhost 32000 localhost 32002 Samir &
+./sh13 localhost 32000 localhost 32003 Arthur &
+./sh13 localhost 32000 localhost 32004 Ludo &
