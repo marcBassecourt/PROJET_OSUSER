@@ -362,7 +362,7 @@ int main(int argc, char ** argv)
 		        tableCartes[ind1][ind2] = val;
 				break;
 
-				// Message 'W' : le joueur recoit l'ID du vainqueur
+				// Message 'W' : le joueur recoit l'ID du vainqueur et le numéro du coupable
 			case 'W':
 				// RAJOUTER DU CODE ICI
 		        sscanf(gbuffer,"%c %d %d", &com, &victoire, &guiltSel);
@@ -686,61 +686,40 @@ int main(int argc, char ** argv)
         	SDL_Rect dstrect = { 0, 0, 200, 50 };
         	SDL_RenderCopy(renderer, texture_connectbutton, NULL, &dstrect);
 	}
-	if (victoire==gId)
-	{
-			char buffer[100];
-        	SDL_Rect dstrect = { -100, -100,1250, 1000 };
-        	SDL_RenderCopy(renderer, texture_victoire, NULL, &dstrect);
-        	SDL_Color col = {255, 0, 0};
-        	for(int i = 0; i < 2; i++){
-        		if(i == 0)
-        			sprintf(buffer,"VICTOIRE du joueur %d : %s",victoire, gNames[victoire]);
-        		if(i == 1)
-        			sprintf(buffer,"Le coupable etait %s", nbnoms[guiltSel]);
-				SDL_Surface* surfaceMessage = TTF_RenderText_Solid(Sans, buffer, col);
-				SDL_Texture* Message = SDL_CreateTextureFromSurface(renderer, surfaceMessage);
+	if(victoire != -1){
+		char buffer[100];
+		SDL_Color col = {255, 0, 0};
+	        	for(int i = 0; i < 2; i++){
+	        		if(i == 0)
+	        			sprintf(buffer,"VICTOIRE du joueur %d : %s",victoire, gNames[victoire]);
+	        		if(i == 1)
+	        			sprintf(buffer,"Le coupable etait %s",nbnoms[guiltSel]);
+					SDL_Surface* surfaceMessage = TTF_RenderText_Solid(Sans, buffer, col);
+					SDL_Texture* Message = SDL_CreateTextureFromSurface(renderer, surfaceMessage);
 
-				SDL_Rect Message_rect; //create a rect
-				Message_rect.x = 750;
-				if(i == 0)
-					Message_rect.y = 620; // controls the rect's y coordinte
-				if(i == 1)
-					Message_rect.y = 650; // controls the rect's y coordinte
-				Message_rect.w = surfaceMessage->w; // controls the width of the rect
-				Message_rect.h = surfaceMessage->h; // controls the height of the rect
+					SDL_Rect Message_rect; //create a rect
+					Message_rect.x = 750;
+					if(i == 0)
+						Message_rect.y = 620; // controls the rect's y coordinte
+					if(i == 1)
+						Message_rect.y = 640; // controls the rect's y coordinte
+					Message_rect.w = surfaceMessage->w; // controls the width of the rect
+					Message_rect.h = surfaceMessage->h; // controls the height of the rect
 
-				SDL_RenderCopy(renderer, Message, NULL, &Message_rect);
-		    		SDL_DestroyTexture(Message);
-		    		SDL_FreeSurface(surfaceMessage);
-        	} 
-	}
-	if (victoire!=gId && victoire != -1)
-	{
-			char buffer[100];
-        	SDL_Rect dstrect = { 200, 30, 600, 700 };
-        	SDL_RenderCopy(renderer, texture_defaite, NULL, &dstrect);
-        	SDL_Color col = {255, 0, 0};
-        	for(int i = 0; i < 2; i++){
-        		if(i == 0)
-        			sprintf(buffer,"VICTOIRE du joueur %d : %s",victoire, gNames[victoire]);
-        		if(i == 1)
-        			sprintf(buffer,"Le coupable etait %s",nbnoms[guiltSel]);
-				SDL_Surface* surfaceMessage = TTF_RenderText_Solid(Sans, buffer, col);
-				SDL_Texture* Message = SDL_CreateTextureFromSurface(renderer, surfaceMessage);
-
-				SDL_Rect Message_rect; //create a rect
-				Message_rect.x = 750;
-				if(i == 0)
-					Message_rect.y = 620; // controls the rect's y coordinte
-				if(i == 1)
-					Message_rect.y = 640; // controls the rect's y coordinte
-				Message_rect.w = surfaceMessage->w; // controls the width of the rect
-				Message_rect.h = surfaceMessage->h; // controls the height of the rect
-
-				SDL_RenderCopy(renderer, Message, NULL, &Message_rect);
-		    		SDL_DestroyTexture(Message);
-		    		SDL_FreeSurface(surfaceMessage);
-        	} 
+					SDL_RenderCopy(renderer, Message, NULL, &Message_rect);
+			    		SDL_DestroyTexture(Message);
+			    		SDL_FreeSurface(surfaceMessage);
+	        	} 
+		if (victoire==gId)
+		{
+	        	SDL_Rect dstrect = { -100, -100,1250, 1000 };
+	        	SDL_RenderCopy(renderer, texture_victoire, NULL, &dstrect);
+		}
+		if (victoire!=gId)
+		{
+	        	SDL_Rect dstrect = { 200, 30, 600, 700 };
+	        	SDL_RenderCopy(renderer, texture_defaite, NULL, &dstrect);
+		}
 	}
         //SDL_SetRenderDrawColor(renderer, 255, 0, 0, SDL_ALPHA_OPAQUE);
         //SDL_RenderDrawLine(renderer, 0, 0, 200, 200);
