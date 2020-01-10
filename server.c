@@ -375,16 +375,22 @@ int main(int argc, char *argv[])
                 	for(int i = 0; i < 4; i++){
                 		if(i == joueurCourant)
                 			continue;
-                		sprintf(reply,"V %d %d %d",i , objetSel, tableCartes[i][objetSel]);
-		            	broadcastMessage(reply);
-                	} 
+                      if(tableCartes[i][objetSel] != 0){
+                		    sprintf(reply,"V %d %d %d",i , objetSel, 100);
+		            	      broadcastMessage(reply);
+                      }
+                      else{
+                  		    sprintf(reply,"V %d %d %d",i , objetSel, 0);
+  		            	      broadcastMessage(reply);
+                      }
+                	}
 				break;
 			        case 'S':
 				// RAJOUTER DU CODE ICI
 			        sscanf(buffer,"%c %d %d %d",&com, &joueurCourant, &joueurSel, &objetSel);
                 	sprintf(reply,"V %d %d %d",joueurSel, objetSel, tableCartes[joueurSel][objetSel]);
 		            broadcastMessage(reply);
-                	
+
 				break;
                 	default:
       			break;
